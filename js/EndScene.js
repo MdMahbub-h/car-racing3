@@ -29,6 +29,9 @@ class EndScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(11)
       .setInteractive({ useHandCursor: true });
+    if (this.score > 999999) {
+      this.scoreText.setFontSize(34);
+    }
     this.crossBtnP = this.add
       .image(525, 492, "ic_close_dialog")
       .setOrigin(0.5)
