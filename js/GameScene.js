@@ -218,15 +218,25 @@ class GameScene extends Phaser.Scene {
     this.swipeTriggered = false; // Prevent multiple triggers in one swipe
     this.swiped = false;
     this.keyDown = false;
+    this.pointerDown = false;
 
     this.input.on("pointerdown", (pointer) => {
-      this.swipeStartX = pointer.x;
-      this.swipeTriggered = false;
-      this.swiped = false;
+      if (!this.keyDown) {
+        this.swipeStartX = pointer.x;
+        this.swipeTriggered = false;
+        this.swiped = false;
+        this.keyDown = true;
+        this.pointerDown = true;
+      }
     });
 
     this.input.on("pointermove", (pointer) => {
-      if (!this.swipeTriggered && !this.swiped) {
+      if (
+        !this.swipeTriggered &&
+        !this.swiped &&
+        this.keyDown &&
+        this.pointerDown
+      ) {
         const dx = pointer.x - this.swipeStartX;
 
         if (Math.abs(dx) >= this.swipeThreshold) {
@@ -246,7 +256,7 @@ class GameScene extends Phaser.Scene {
           this.onSwipeRight();
         }
       }
-
+      this.pointerDown = false;
       this.swiped = false;
     });
 
@@ -256,7 +266,6 @@ class GameScene extends Phaser.Scene {
     });
 
     //keyboard
-    this.cursorActive = false;
     this.input.keyboard.on("keydown-LEFT", () => {
       if (!this.keyDown) {
         this.keyDown = true;
@@ -428,6 +437,10 @@ class GameScene extends Phaser.Scene {
     this.score += addScore;
     if (this.score < 0) {
       this.score = 0;
+    }
+    if (this.score > 999999) {
+      this.scoreText.setFontSize(18);
+      this.scoreText.x = 600 - 165;
     }
     const color = add > 0 ? 0x22ff22 : 0xff4400;
     let addTextValue = add > 0 ? `+${addScore}` : `${addScore}`;
