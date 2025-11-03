@@ -24,10 +24,11 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
   scene: [PreloadScene, StartScene, GameScene, EndScene],
 };
 
 const game = new Phaser.Game(config);
+
