@@ -288,24 +288,24 @@ class GameScene extends Phaser.Scene {
   onSwipe(direction) {
     if (this.currentLaneIndex < this.lanes.length - 1 && direction > 0) {
       this.currentLaneIndex++;
-      this.tweens.add({
-        targets: this.player,
-        angle: +10,
-        scale: this.playerScale * 1.1,
-        duration: 100 / this.gameSpeed,
-        yoyo: true,
-        ease: "Power2",
-      });
+      // this.tweens.add({
+      //   targets: this.player,
+      //   angle: +10,
+      //   scale: this.playerScale * 1.1,
+      //   duration: 100 / this.gameSpeed,
+      //   yoyo: true,
+      //   ease: "Power2",
+      // });
     } else if (this.currentLaneIndex > 0 && direction < 0) {
       this.currentLaneIndex--;
-      this.tweens.add({
-        targets: this.player,
-        angle: -10,
-        scale: this.playerScale * 1.1,
-        duration: 100 / this.gameSpeed,
-        yoyo: true,
-        ease: "Power2",
-      });
+      // this.tweens.add({
+      //   targets: this.player,
+      //   angle: -10,
+      //   scale: this.playerScale * 1.1,
+      //   duration: 100 / this.gameSpeed,
+      //   yoyo: true,
+      //   ease: "Power2",
+      // });
     }
     // Move player immediately
     this.tweens.add({
@@ -613,4 +613,5 @@ class GameScene extends Phaser.Scene {
 }
 
 export default GameScene;
+
 
