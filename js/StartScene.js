@@ -17,7 +17,7 @@ class StartScene extends Phaser.Scene {
     // Background
     this.speed = 1;
     this.duration = 60;
-    this.scene.start("GameScene");
+    // this.scene.start("GameScene");
 
     this.scaleBg = 2.6;
     this.bg = this.add
@@ -186,3 +186,4 @@ class StartScene extends Phaser.Scene {
 }
 
 export default StartScene;
+
