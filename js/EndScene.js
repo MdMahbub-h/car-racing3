@@ -1,3 +1,6 @@
+function showTotalScore(score) {
+  console.log(score);
+}
 class EndScene extends Phaser.Scene {
   constructor() {
     super({ key: "EndScene" });
@@ -10,7 +13,7 @@ class EndScene extends Phaser.Scene {
   }
 
   create() {
-    console.log(this.score);
+    showTotalScore(this.score);
     // Background
     this.paused = true;
     this.endMenuItems = [];
@@ -30,7 +33,15 @@ class EndScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setDepth(11);
-
+    if (this.score > 99999) {
+      this.scoreText.setFontSize(30);
+    }
+    if (this.score > 9999999) {
+      this.scoreText.setFontSize(26);
+    }
+    if (this.score > 999999999) {
+      this.scoreText.setFontSize(20);
+    }
     this.crossBtnP = this.add
       .image(525, 492, "ic_close_dialog")
       .setOrigin(0.5)

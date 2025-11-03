@@ -186,4 +186,3 @@ class StartScene extends Phaser.Scene {
 }
 
 export default StartScene;
-

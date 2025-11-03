@@ -40,7 +40,7 @@ class GameScene extends Phaser.Scene {
     this.currentCoinLane = Phaser.Utils.Array.GetRandom(this.lene);
     // this.scene.start("EndScene", {
     //   won: false,
-    //   score: 50,
+    //   score: 500000000,
     //   time: this.gameDuration,
     // });
     this.bgAudio = this.sound.add("bgaudio", { loop: true, volume: 0.5 });
@@ -429,6 +429,10 @@ class GameScene extends Phaser.Scene {
     }
     if (this.score > 9999999) {
       this.scoreText.setFontSize(17);
+      this.scoreText.x = 600 - 160;
+    }
+    if (this.score > 999999999) {
+      this.scoreText.setFontSize(12);
       this.scoreText.x = 600 - 160;
     }
     const color = add > 0 ? 0x22ff22 : 0xff4400;
