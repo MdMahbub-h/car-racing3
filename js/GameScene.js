@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
     this.obstacleSpawnRate = 2;
     this.coinSpawnRate = 2.5;
     this.jaziItemSpawnRate = 0.4;
-    this.gameDuration = 6;
+    this.gameDuration = 60;
     this.coinPoints = 5;
     this.jaziItemPoints = 25;
     this.obstaclePointsPenalty = -5;
@@ -613,3 +613,4 @@ class GameScene extends Phaser.Scene {
 }
 
 export default GameScene;
+
