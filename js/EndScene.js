@@ -26,13 +26,11 @@ class EndScene extends Phaser.Scene {
         fontStyle: "bold italic",
         fontSize: "45px",
         color: "#ffffff",
+        padding: { left: 10, right: 10, top: 5, bottom: 5 },
       })
       .setOrigin(0.5)
-      .setDepth(11)
-      .setInteractive({ useHandCursor: true });
-    if (this.score > 999999) {
-      this.scoreText.setFontSize(34);
-    }
+      .setDepth(11);
+
     this.crossBtnP = this.add
       .image(525, 492, "ic_close_dialog")
       .setOrigin(0.5)
@@ -45,18 +43,6 @@ class EndScene extends Phaser.Scene {
     this.endMenuItems.push(this.yesBtn);
     this.endMenuItems.push(this.crossBtnP);
 
-    this.scoreText.on("pointerdown", () => {
-      this.tweens.add({
-        targets: this.scoreText,
-        scale: 0.6,
-        duration: 100,
-        ease: "Power1",
-        yoyo: true,
-        onComplete: () => {
-          // this.scene.start("StartScene");
-        },
-      });
-    });
     this.crossBtnP.on("pointerdown", () => {
       this.tweens.add({
         targets: this.crossBtnP,
