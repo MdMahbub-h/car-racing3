@@ -40,7 +40,7 @@ class GameScene extends Phaser.Scene {
     this.currentCoinLane = Phaser.Utils.Array.GetRandom(this.lene);
     // this.scene.start("EndScene", {
     //   won: false,
-    //   score: 12345546745654,
+    //   score: 50,
     //   time: this.gameDuration,
     // });
     this.bgAudio = this.sound.add("bgaudio", { loop: true, volume: 0.5 });
@@ -261,6 +261,7 @@ class GameScene extends Phaser.Scene {
       }
 
       this.pointerDown = false;
+      this.swipeTriggered = false;
     });
 
     // this.input.on("pointerupoutside", () => {
@@ -315,7 +316,6 @@ class GameScene extends Phaser.Scene {
       ease: "Power2",
       onComplete: () => {
         this.keyDown = false;
-        this.swipeTriggered = false;
       },
     });
   }
@@ -613,5 +613,3 @@ class GameScene extends Phaser.Scene {
 }
 
 export default GameScene;
-
-
