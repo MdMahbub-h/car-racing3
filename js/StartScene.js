@@ -17,13 +17,15 @@ class StartScene extends Phaser.Scene {
     // Background
     this.speed = 1;
     this.duration = 60;
-    // this.scene.start("GameScene");
+    this.scene.start("GameScene");
 
     this.scaleBg = 2.6;
     this.bg = this.add
       .tileSprite(300, 650, 600 * this.scaleBg, 1300 * this.scaleBg, "bg")
       .setScale(1 / this.scaleBg);
 
+    // this.pauseMenu();
+    //
     this.crossBtn = this.add
       .image(50, 50, "ic_cross")
       .setOrigin(0.5)
@@ -132,18 +134,18 @@ class StartScene extends Phaser.Scene {
       .image(300, 450, "ic_dialog")
       .setOrigin(0.5, 0)
       .setDepth(11)
-      .setScale(0.75);
+      .setScale(0.38);
     this.yesBtn = this.add
       .image(300, 720, "btn_yes")
       .setOrigin(0.5)
       .setDepth(11)
-      .setScale(0.7)
+      .setScale(0.35)
       .setInteractive({ useHandCursor: true });
     this.crossBtnP = this.add
-      .image(525, 492, "ic_close_dialog")
+      .image(530, 492, "ic_close_dialog")
       .setOrigin(0.5)
       .setDepth(11)
-      .setScale(1.6)
+      .setScale(0.3)
       .setInteractive({ useHandCursor: true });
 
     this.exitMenuItems.push(this.blurBg);
@@ -154,7 +156,7 @@ class StartScene extends Phaser.Scene {
     this.yesBtn.on("pointerdown", () => {
       this.tweens.add({
         targets: this.yesBtn,
-        scale: 0.6,
+        scale: 0.3,
         duration: 100,
         ease: "Power1",
         yoyo: true,
@@ -166,7 +168,7 @@ class StartScene extends Phaser.Scene {
     this.crossBtnP.on("pointerdown", () => {
       this.tweens.add({
         targets: this.crossBtnP,
-        scale: 1.3,
+        scale: 0.25,
         duration: 100,
         ease: "Power1",
         yoyo: true,

@@ -10,6 +10,7 @@ class EndScene extends Phaser.Scene {
   }
 
   create() {
+    console.log(this.score);
     // Background
     this.paused = true;
     this.endMenuItems = [];
@@ -18,9 +19,9 @@ class EndScene extends Phaser.Scene {
       .image(300, 450, "gameOver")
       .setOrigin(0.5, 0)
       .setDepth(11)
-      .setScale(1);
+      .setScale(0.38);
     this.scoreText = this.add
-      .text(300, 706, this.score, {
+      .text(300, 725, this.score, {
         fontFamily: "Nunito, sans-serif",
         fontStyle: "bold italic",
         fontSize: "45px",
@@ -36,7 +37,7 @@ class EndScene extends Phaser.Scene {
       .image(525, 492, "ic_close_dialog")
       .setOrigin(0.5)
       .setDepth(11)
-      .setScale(1.6)
+      .setScale(0.3)
       .setInteractive({ useHandCursor: true });
 
     this.endMenuItems.push(this.blurBg);
@@ -59,7 +60,7 @@ class EndScene extends Phaser.Scene {
     this.crossBtnP.on("pointerdown", () => {
       this.tweens.add({
         targets: this.crossBtnP,
-        scale: 1.3,
+        scale: 0.25,
         duration: 100,
         ease: "Power1",
         yoyo: true,

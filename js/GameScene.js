@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
     this.obstacleSpawnRate = 2;
     this.coinSpawnRate = 2.5;
     this.jaziItemSpawnRate = 0.4;
-    this.gameDuration = 60;
+    this.gameDuration = 6;
     this.coinPoints = 5;
     this.jaziItemPoints = 25;
     this.obstaclePointsPenalty = -5;
@@ -57,6 +57,9 @@ class GameScene extends Phaser.Scene {
       .setScale(0.3)
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => {
+        if (this.paused) return;
+        this.paused = true;
+
         this.tweens.add({
           targets: this.crossBtn,
           scale: 0.26,
@@ -135,6 +138,17 @@ class GameScene extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     this.playerScale = 0.4;
     this.player.setScale(this.playerScale).setDepth(5).setOrigin(0.5, 0);
+    // Reduce collider size (e.g., 70% of original width and height)
+    this.player.body.setSize(
+      this.player.width * 0.7, // new width (70%)
+      this.player.height * 0.8 // new height (70%)
+    );
+
+    // Recenter the hitbox so it stays aligned
+    this.player.body.setOffset(
+      (this.player.width - this.player.width * 0.7) / 2,
+      (this.player.height - this.player.height * 0.7) / 2
+    );
 
     this.currentLaneIndex = 1;
     this.lanes = [140, 250, 350, 460];
@@ -211,124 +225,97 @@ class GameScene extends Phaser.Scene {
   }
   controlls() {
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.pointerActive = false;
-
     this.swipeStartX = 0;
     this.swipeThreshold = 50;
-    this.swipeTriggered = false; // Prevent multiple triggers in one swipe
-    this.swiped = false;
     this.keyDown = false;
+
     this.pointerDown = false;
+    this.swipeTriggered = false; // Prevent multiple triggers in one swipe
 
     this.input.on("pointerdown", (pointer) => {
       if (!this.keyDown) {
-        this.swipeStartX = pointer.x;
-        this.swipeTriggered = false;
-        this.swiped = false;
         this.keyDown = true;
+        this.swipeStartX = pointer.x;
         this.pointerDown = true;
       }
     });
 
     this.input.on("pointermove", (pointer) => {
-      if (
-        !this.swipeTriggered &&
-        !this.swiped &&
-        this.keyDown &&
-        this.pointerDown
-      ) {
+      if (this.keyDown && this.pointerDown && !this.swipeTriggered) {
         const dx = pointer.x - this.swipeStartX;
-
         if (Math.abs(dx) >= this.swipeThreshold) {
           this.swipeTriggered = true;
-
-          if (dx > 0) this.onSwipeLeft();
-          else this.onSwipeRight();
+          if (dx > 0) this.onSwipe(1);
+          else this.onSwipe(-1);
         }
       }
     });
 
     this.input.on("pointerup", (pointer) => {
-      if (!this.swipeTriggered && !this.swiped) {
+      if (!this.swipeTriggered && !this.paused) {
         if (this.player.x + this.swipeThreshold / 2 < pointer.x) {
-          this.onSwipeLeft();
+          this.onSwipe(1);
         } else if (this.player.x - this.swipeThreshold > pointer.x) {
-          this.onSwipeRight();
+          this.onSwipe(-1);
         }
       }
+
       this.pointerDown = false;
-      this.swiped = false;
     });
 
-    this.input.on("pointerupoutside", () => {
-      this.swipeTriggered = false;
-      this.swiped = false;
-    });
+    // this.input.on("pointerupoutside", () => {
+    //   this.swipeTriggered = false;
+    //   this.pointerDown = false
+    // });
 
     //keyboard
     this.input.keyboard.on("keydown-LEFT", () => {
       if (!this.keyDown) {
         this.keyDown = true;
-        this.onSwipeRight();
+
+        this.onSwipe(-1);
       }
     });
     this.input.keyboard.on("keydown-RIGHT", () => {
       if (!this.keyDown) {
         this.keyDown = true;
-        this.onSwipeLeft();
+
+        this.onSwipe(1);
       }
     });
   }
 
-  onSwipeLeft() {
-    if (this.currentLaneIndex < this.lanes.length - 1) {
+  onSwipe(direction) {
+    if (this.currentLaneIndex < this.lanes.length - 1 && direction > 0) {
       this.currentLaneIndex++;
       this.tweens.add({
         targets: this.player,
         angle: +10,
         scale: this.playerScale * 1.1,
-        duration: 50,
+        duration: 100 / this.gameSpeed,
         yoyo: true,
         ease: "Power2",
       });
-    }
-    // Move player immediately
-    this.tweens.add({
-      targets: this.player,
-      x: this.lanes[this.currentLaneIndex],
-      duration: 100,
-      ease: "Power2",
-      onComplete: () => {
-        this.swipeTriggered = false;
-        this.swiped = true;
-        this.keyDown = false;
-      },
-    });
-  }
-
-  onSwipeRight() {
-    if (this.currentLaneIndex > 0) {
+    } else if (this.currentLaneIndex > 0 && direction < 0) {
       this.currentLaneIndex--;
       this.tweens.add({
         targets: this.player,
         angle: -10,
         scale: this.playerScale * 1.1,
-        duration: 50,
+        duration: 100 / this.gameSpeed,
         yoyo: true,
         ease: "Power2",
       });
     }
-
     // Move player immediately
     this.tweens.add({
       targets: this.player,
       x: this.lanes[this.currentLaneIndex],
-      duration: 100,
+      duration: 200 / this.gameSpeed,
       ease: "Power2",
       onComplete: () => {
-        this.swipeTriggered = false;
-        this.swiped = true;
         this.keyDown = false;
+        this.swipeTriggered = false;
       },
     });
   }
@@ -341,18 +328,18 @@ class GameScene extends Phaser.Scene {
       .image(300, 450, "ic_dialog")
       .setOrigin(0.5, 0)
       .setDepth(11)
-      .setScale(0.75);
+      .setScale(0.38);
     this.yesBtn = this.add
       .image(300, 720, "btn_yes")
       .setOrigin(0.5)
       .setDepth(11)
-      .setScale(0.7)
+      .setScale(0.35)
       .setInteractive({ useHandCursor: true });
     this.crossBtnP = this.add
       .image(525, 492, "ic_close_dialog")
       .setOrigin(0.5)
       .setDepth(11)
-      .setScale(1.6)
+      .setScale(0.3)
       .setInteractive({ useHandCursor: true });
 
     this.exitMenuItems.push(this.blurBg);
@@ -363,7 +350,7 @@ class GameScene extends Phaser.Scene {
     this.yesBtn.on("pointerdown", () => {
       this.tweens.add({
         targets: this.yesBtn,
-        scale: 0.6,
+        scale: 0.3,
         duration: 100,
         ease: "Power1",
         yoyo: true,
@@ -380,7 +367,7 @@ class GameScene extends Phaser.Scene {
     this.crossBtnP.on("pointerdown", () => {
       this.tweens.add({
         targets: this.crossBtnP,
-        scale: 1.3,
+        scale: 0.25,
         duration: 100,
         ease: "Power1",
         yoyo: true,
@@ -398,8 +385,6 @@ class GameScene extends Phaser.Scene {
   }
 
   pauseGame() {
-    if (this.paused) return;
-    this.paused = true;
     // this.tweens.getAllTweens().forEach((tween) => tween.pause());
     this.time.paused = true;
     this.physics.world.pause();
@@ -427,7 +412,7 @@ class GameScene extends Phaser.Scene {
     let addScore = add;
     if (add == this.coinPoints) {
       addScore = this.coinMultiply;
-      this.coinMultiply = this.coinMultiply * 2;
+      this.coinMultiply = this.coinMultiply + this.coinPoints;
       this.carMultiply = 1;
     } else if (add == this.obstaclePointsPenalty) {
       this.coinMultiply = this.coinPoints;
@@ -438,9 +423,13 @@ class GameScene extends Phaser.Scene {
     if (this.score < 0) {
       this.score = 0;
     }
-    if (this.score > 999999) {
-      this.scoreText.setFontSize(18);
-      this.scoreText.x = 600 - 165;
+    if (this.score > 99999) {
+      this.scoreText.setFontSize(20);
+      this.scoreText.x = 600 - 160;
+    }
+    if (this.score > 9999999) {
+      this.scoreText.setFontSize(17);
+      this.scoreText.x = 600 - 160;
     }
     const color = add > 0 ? 0x22ff22 : 0xff4400;
     let addTextValue = add > 0 ? `+${addScore}` : `${addScore}`;

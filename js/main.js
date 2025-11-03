@@ -8,6 +8,7 @@ const config = {
   type: Phaser.AUTO,
   width: 600,
   height: 1300,
+
   border: 2,
   scale: {
     mode: Phaser.Scale.FIT,
@@ -23,7 +24,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: false,
+      debug: true,
     },
   },
   scene: [PreloadScene, StartScene, GameScene, EndScene],
