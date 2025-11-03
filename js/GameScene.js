@@ -410,9 +410,9 @@ class GameScene extends Phaser.Scene {
   }
   updateScore(add) {
     let addScore = add;
-    if (add == this.coinPoints) {
+    if (add == this.) {
       addScore = this.coinMultiply;
-      this.coinMultiply = this.coinMultiply + this.coinPoints;
+      this.coinMultiply = this.coinMultiply *2;
       this.carMultiply = 1;
     } else if (add == this.obstaclePointsPenalty) {
       this.coinMultiply = this.coinPoints;
@@ -613,3 +613,4 @@ class GameScene extends Phaser.Scene {
 }
 
 export default GameScene;
+
